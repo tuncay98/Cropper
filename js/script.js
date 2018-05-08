@@ -28,13 +28,9 @@ upload.addEventListener('change', function(e) {
 
 });
 
-
-
-
-
     var barway= document.createElement("div");
     barway.classList.add("barway");
-    barway.setAttribute("style","width: 200px; height: 3px; background: gray; float: left; position: absolute; top: 10%; left: 80%");
+    barway.setAttribute("style","width: 100px; height: 3px; background: gray; float: left; position: relative; top: 20px; margin-left: 3px; ");
     document.body.appendChild(barway)
 
     var barinside= document.createElement("div");
@@ -49,6 +45,7 @@ upload.addEventListener('change', function(e) {
     var displayer= document.createElement("div");
     displayer.classList.add("displayer");
     displayer.setAttribute("style", "position: absolute; top: 15px; left: 0;");
+    displayer.innerHTML= "0% Zoom"
     barinside.appendChild(displayer)
 
     var a= 0;
@@ -66,17 +63,17 @@ upload.addEventListener('change', function(e) {
         event.preventDefault();
         window.removeEventListener("mousemove", move)
     })
-
+    var diff;
     function move(e){
-        var diff= e.clientX- a;
-        if(diff/2>100){
-            diff= 200;
+         diff= e.clientX- a;
+        if(diff>barway.clientWidth){
+            diff= barway.clientWidth;
         }
         if(diff/2<0){
             diff=0;
         }
-        bar.style.left= (diff/2)+"%"
-        displayer.innerHTML= ""+(Math.floor(bar.offsetLeft/2))+"% Zoom"
+        bar.style.left= (diff*(100/barway.clientWidth))+"%"
+        displayer.innerHTML= ""+(Math.floor(bar.offsetLeft*(100/barway.clientWidth)))+"% Zoom"
     }
 
 
@@ -88,11 +85,12 @@ upload.addEventListener('change', function(e) {
     }
 setInterval(function(){
     draw()
-},1)
+    
+})
 
 var croper = document.createElement("div")
 croper.classList.add("div");
-croper.setAttribute("style", "min-height: 50px; min-width: 50px; resize: both; overflow: hidden; border: 2px solid blue; width: 50px; height: 50px; position: absolute; left: 0%; top: 0%; z-index: 5555; ");
+croper.setAttribute("style", "user-select: none;min-height: 50px; min-width: 50px; resize: none; overflow: hidden; border: 2px solid blue; width: 50px; height: 50px; position: absolute; left: 0%; top: 0%; z-index: 5555; ");
 container.appendChild(croper)
 
 var drag= document.createElement("div");
@@ -129,37 +127,104 @@ drag.addEventListener("mousedown", function(e){
     window.addEventListener("mousemove", mover)
     Xwidth= e.clientX- parseInt(croper.style.left)
     Yheight= e.clientY- parseInt(croper.style.top)
-})
-window.addEventListener("mouseup", function(){
+    window.addEventListener("mouseup", function(){
 
-    window.removeEventListener("mousemove", mover)
+        window.removeEventListener("mousemove", mover)
+    })
 })
+
 
 var canvas2=  document.createElement("canvas");
 canvas2.id= "canvas2"
 canvas2.width= 500;
 canvas2.height= 500;
-canvas2.setAttribute("style", "float: left; border: 2px solid black; margin-left: 20px;");
+canvas2.setAttribute("style", "transition: width 1s, height 1s, top 1s, left 1s; float: left; border: 2px solid black; margin-left: 10px;");
 container.appendChild(canvas2)
 
 var ctx2 = canvas2.getContext("2d");
 
 
+var p=0;
+var p2= p+1
 function draw2(){
     img2.onload=function(){
-
-        var k=croper.clientWidth*(this.width/500)-(bar.offsetLeft*4)
-        var k2= croper.clientHeight*(this.height/500)-(bar.offsetLeft*2)
-        if(k<10){
-            k=10;
+        if(croper.clientHeight<100){
+            barway.style.width= "50px"
         }
-        if(k2<10){
-            k2=10
+        if(croper.clientHeight>100){
+            if(p==0){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "100px"
         }
-        ctx2.drawImage(img2, (parseInt(croper.style.left)*(this.width/500))+(bar.offsetLeft*2), (parseInt(croper.style.top)*(this.height/500)+(bar.offsetLeft/2)),(k), (k2), 0,0, canvas2.width,canvas2.height)
+        if(croper.clientHeight>150){
+            
+            if(p==1){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "150px"
+        }
+        if(croper.clientHeight>200){
+           
+            if(p==2){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "200px"
+        }
+        if(croper.clientHeight>250){
+            
+            if(p==3){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "250px"
+        }
+        if(croper.clientHeight>300){
+            
+            if(p==4){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "300px"
+        }
+        if(croper.clientHeight>350){
+            
+            if(p==5){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "350px"
+        }
+        if(croper.clientHeight>400){
+           
+            if(p==6){
+                bar.style.left= 0+"%";
+                displayer.innerHTML= "0% Zoom"
+                p++;
+            }
+            barway.style.width= "400px"
+        }
+       
+        var x= (parseInt(croper.style.left)*(this.width/canvas2.clientWidth))+((bar.offsetLeft/2)*(this.width/canvas2.clientWidth))
+        var y= (parseInt(croper.style.top)*(this.height/canvas2.clientHeight)+((bar.offsetLeft/2)*(this.height/canvas2.clientHeight)))
+        var widthImg=((croper.clientWidth*(this.width/canvas2.clientWidth)))-(bar.offsetLeft*(this.width/canvas2.clientWidth))
+        var heightImg= croper.clientHeight*(this.height/canvas2.clientHeight)-(bar.offsetLeft*(this.height/canvas2.clientHeight))
+        console.log(x,": " , y, ": ", widthImg, ": ",heightImg )
 
+        ctx2.drawImage(img2, x, y, widthImg, heightImg, 0,0, canvas2.clientWidth,canvas2.clientHeight)
+        
     }
-
+    
+    
     croper.style.maxHeight= (canvas.clientHeight- parseInt(croper.style.top))+"px"
     croper.style.maxWidth= (canvas.clientWidth- parseInt(croper.style.left))+"px"    
     setInterval(function(){
@@ -169,3 +234,19 @@ function draw2(){
 setInterval(function(){
 draw2()
 },1)
+
+var box= document.createElement("div");
+box.setAttribute("style", "cursor: nwse-resize; width: 15px; height: 15px; position: absolute; right: 0; bottom: 0; background: gray")
+croper.appendChild(box)
+
+box.addEventListener('mousedown', function(){
+	window.addEventListener('mousemove', basla);
+   	window.addEventListener('mouseup', function(){
+        window.removeEventListener('mousemove', basla);
+       });
+});
+
+function basla(e) {
+   croper.style.width = (e.clientX - croper.offsetLeft) + 'px';
+   croper.style.height = (e.clientX - croper.offsetLeft) + 'px';
+}
